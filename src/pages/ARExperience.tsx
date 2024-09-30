@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import MarkerUpload from '../components/MarkerUpload';
 import OutputUpload from '../components/OutputUpload';
 import PreviewSection from '../components/PreviewSection';
@@ -8,6 +9,7 @@ const ARExperience: React.FC = () => {
   const [contentUrl, setContentUrl] = useState<string | null>(null);
   const [scale, setScale] = useState<number>(1);
   const [rotation, setRotation] = useState<number>(0);
+  const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
 
   const handleSave = () => {
     // In a real application, you would save the current state to a backend
@@ -16,16 +18,23 @@ const ARExperience: React.FC = () => {
   };
 
   const handleGenerateARExperience = () => {
-    // Generate a unique ID
     const uniqueId = Math.random().toString(36).substr(2, 9);
-    
-    // Use the current origin (domain) to create the AR experience URL
     const arExperienceUrl = `${window.location.origin}/view/${uniqueId}`;
     
-    console.log('Generated AR experience URL:', arExperienceUrl);
-    alert(`AR experience generated! URL: ${arExperienceUrl}`);
+    // In a real application, you would send this data to your backend
+    const arExperienceData = {
+      id: uniqueId,
+      markerUrl,
+      contentUrl,
+      scale,
+      rotation
+    };
     
-    // Here you would typically send this data to your backend to create the actual AR experience
+    // Simulating storing the data in localStorage (replace with actual API call in production)
+    localStorage.setItem(`arExperience_${uniqueId}`, JSON.stringify(arExperienceData));
+    
+    setGeneratedUrl(arExperienceUrl);
+    console.log('Generated AR experience URL:', arExperienceUrl);
   };
 
   return (
@@ -59,6 +68,18 @@ const ARExperience: React.FC = () => {
           Generate AR Experience
         </button>
       </div>
+      {generatedUrl && (
+        <div className="mt-8 text-center">
+          <h2 className="text-2xl font-semibold mb-4">AR Experience Generated</h2>
+          <p className="mb-4">Scan this QR code to view the AR experience:</p>
+          <div className="flex justify-center">
+            <QRCodeSVG value={generatedUrl} size={256} />
+          </div>
+          <p className="mt-4">
+            Or visit this URL: <a href={generatedUrl} className="text-blue-500 hover:underline">{generatedUrl}</a>
+          </p>
+        </div>
+      )}
     </div>
   );
 };
