@@ -16,11 +16,16 @@ const ARExperience: React.FC = () => {
   };
 
   const handleGenerateARExperience = () => {
-    // In a real application, you would generate a unique URL for the AR experience
+    // Generate a unique ID
     const uniqueId = Math.random().toString(36).substr(2, 9);
-    const arExperienceUrl = `https://your-ar-platform.com/view/${uniqueId}`;
+    
+    // Use the current origin (domain) to create the AR experience URL
+    const arExperienceUrl = `${window.location.origin}/view/${uniqueId}`;
+    
     console.log('Generated AR experience URL:', arExperienceUrl);
     alert(`AR experience generated! URL: ${arExperienceUrl}`);
+    
+    // Here you would typically send this data to your backend to create the actual AR experience
   };
 
   return (
