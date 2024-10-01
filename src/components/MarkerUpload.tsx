@@ -12,22 +12,22 @@ const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded }) => {
     const file = acceptedFiles[0];
     const reader = new FileReader();
 
-    reader.onload = async (e) => {
+    reader.onload = async (e: ProgressEvent<FileReader>) => {
       const dataUrl = e.target?.result as string;
       setPreviewUrl(dataUrl);
 
       // Convert image to AR.js marker format
       const img = new Image();
       img.onload = () => {
-        const canvas = document.createElement('canvas') as HTMLCanvasElement;
-        canvas.width = 512;
-        canvas.height = 512;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, 512, 512);
-          const imageData = ctx.getImageData(0, 0, 512, 512);
-          const markerUrl = generateARMarker(imageData);
-          onMarkerUploaded(markerUrl);
+        const canvas = createCanvas(512, 512);
+        if (canvas) {
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, 512, 512);
+            const imageData = ctx.getImageData(0, 0, 512, 512);
+            const markerUrl = generateARMarker(imageData);
+            onMarkerUploaded(markerUrl);
+          }
         }
       };
       img.src = dataUrl;
@@ -62,15 +62,31 @@ const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded }) => {
   );
 };
 
+// Type guard to check if an element is an HTMLCanvasElement
+function isHTMLCanvasElement(element: unknown): element is HTMLCanvasElement {
+  return element instanceof HTMLCanvasElement;
+}
+
+// Helper function to create a canvas element
+function createCanvas(width: number, height: number): HTMLCanvasElement | null {
+  const canvas = document.createElement('canvas');
+  if (isHTMLCanvasElement(canvas)) {
+    canvas.width = width;
+    canvas.height = height;
+    return canvas;
+  }
+  return null;
+}
+
 // Function to generate AR.js compatible marker
 function generateARMarker(imageData: ImageData): string {
-  const canvas = document.createElement('canvas');
-  canvas.width = imageData.width;
-  canvas.height = imageData.height;
-  const ctx = canvas.getContext('2d');
-  if (ctx) {
-    ctx.putImageData(imageData, 0, 0);
-    return canvas.toDataURL('image/png');
+  const canvas = createCanvas(imageData.width, imageData.height);
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.putImageData(imageData, 0, 0);
+      return canvas.toDataURL('image/png');
+    }
   }
   return '';
 }
