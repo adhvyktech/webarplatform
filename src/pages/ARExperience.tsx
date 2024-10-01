@@ -11,12 +11,17 @@ const ARExperience: React.FC = () => {
   const [scale, setScale] = useState<number>(1);
   const [rotation, setRotation] = useState<number>(0);
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSave = async () => {
+  const handleGenerateARExperience = async () => {
     if (!markerUrl || !contentUrl) {
-      alert('Please upload both marker and content images.');
+      setError('Please upload both marker and content images.');
       return;
     }
+
+    setIsLoading(true);
+    setError(null);
 
     const arExperienceData = { marker_url: markerUrl, content_url: contentUrl, scale, rotation };
     
@@ -34,7 +39,9 @@ const ARExperience: React.FC = () => {
       console.log('AR experience saved successfully!');
     } catch (error) {
       console.error('Error saving AR experience:', error);
-      alert('Failed to save AR experience. Please try again.');
+      setError('Failed to save AR experience. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -55,14 +62,22 @@ const ARExperience: React.FC = () => {
           onRotationChange={setRotation}
         />
       )}
-      <div className="mt-8 flex justify-center space-x-4">
+      <div className="mt-8 flex justify-center">
         <button
-          onClick={handleSave}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+          onClick={handleGenerateARExperience}
+          disabled={isLoading || !markerUrl || !contentUrl}
+          className={`bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded ${
+            (isLoading || !markerUrl || !contentUrl) && 'opacity-50 cursor-not-allowed'
+          }`}
         >
-          Generate AR Experience
+          {isLoading ? 'Generating...' : 'Generate AR Experience'}
         </button>
       </div>
+      {error && (
+        <div className="mt-4 text-red-500 text-center">
+          {error}
+        </div>
+      )}
       {generatedUrl && (
         <div className="mt-8 text-center">
           <h2 className="text-2xl font-semibold mb-4">AR Experience Generated</h2>
