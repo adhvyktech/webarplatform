@@ -19,7 +19,7 @@ const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded }) => {
       // Convert image to AR.js marker format
       const img = new Image();
       img.onload = () => {
-        const canvas = document.createElement('canvas') as HTMLCanvasElement;
+        const canvas = document.createElement('canvas');
         canvas.width = 512;
         canvas.height = 512;
         const ctx = canvas.getContext('2d');
@@ -64,8 +64,6 @@ const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded }) => {
 
 // Function to generate AR.js compatible marker
 function generateARMarker(imageData: ImageData): string {
-  // This is a simplified version. In a real-world scenario, you'd use a more complex algorithm
-  // to generate an AR.js compatible marker.
   const canvas = document.createElement('canvas');
   canvas.width = imageData.width;
   canvas.height = imageData.height;
