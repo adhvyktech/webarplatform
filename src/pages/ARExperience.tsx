@@ -3,6 +3,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import MarkerUpload from '../components/MarkerUpload';
 import OutputUpload from '../components/OutputUpload';
 import PreviewSection from '../components/PreviewSection';
+import { supabase } from '../utils/supabaseClient';
 
 const ARExperience: React.FC = () => {
   const [markerUrl, setMarkerUrl] = useState<string | null>(null);
@@ -11,30 +12,30 @@ const ARExperience: React.FC = () => {
   const [rotation, setRotation] = useState<number>(0);
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
 
-  const handleSave = () => {
-    // In a real application, you would save the current state to a backend
-    console.log('Saving AR experience:', { markerUrl, contentUrl, scale, rotation });
-    alert('AR experience saved successfully!');
-  };
+  const handleSave = async () => {
+    if (!markerUrl || !contentUrl) {
+      alert('Please upload both marker and content images.');
+      return;
+    }
 
-  const handleGenerateARExperience = () => {
-    const uniqueId = Math.random().toString(36).substr(2, 9);
-    const arExperienceUrl = `${window.location.origin}/view/${uniqueId}`;
+    const arExperienceData = { marker_url: markerUrl, content_url: contentUrl, scale, rotation };
     
-    // In a real application, you would send this data to your backend
-    const arExperienceData = {
-      id: uniqueId,
-      markerUrl,
-      contentUrl,
-      scale,
-      rotation
-    };
-    
-    // Simulating storing the data in localStorage (replace with actual API call in production)
-    localStorage.setItem(`arExperience_${uniqueId}`, JSON.stringify(arExperienceData));
-    
-    setGeneratedUrl(arExperienceUrl);
-    console.log('Generated AR experience URL:', arExperienceUrl);
+    try {
+      const { data, error } = await supabase
+        .from('ar_experiences')
+        .insert(arExperienceData)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      const arExperienceUrl = `${window.location.origin}/view/${data.id}`;
+      setGeneratedUrl(arExperienceUrl);
+      console.log('AR experience saved successfully!');
+    } catch (error) {
+      console.error('Error saving AR experience:', error);
+      alert('Failed to save AR experience. Please try again.');
+    }
   };
 
   return (
@@ -58,12 +59,6 @@ const ARExperience: React.FC = () => {
         <button
           onClick={handleSave}
           className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-        >
-          Save AR Experience
-        </button>
-        <button
-          onClick={handleGenerateARExperience}
-          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
         >
           Generate AR Experience
         </button>

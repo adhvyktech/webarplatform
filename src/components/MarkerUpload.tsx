@@ -8,14 +8,29 @@ interface MarkerUploadProps {
 const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     const reader = new FileReader();
 
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       const dataUrl = e.target?.result as string;
       setPreviewUrl(dataUrl);
-      onMarkerUploaded(dataUrl);
+
+      // Convert image to AR.js marker format
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 512;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, 512, 512);
+          const imageData = ctx.getImageData(0, 0, 512, 512);
+          const markerUrl = generateARMarker(imageData);
+          onMarkerUploaded(markerUrl);
+        }
+      };
+      img.src = dataUrl;
     };
 
     reader.readAsDataURL(file);
@@ -46,5 +61,20 @@ const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded }) => {
     </div>
   );
 };
+
+// Function to generate AR.js compatible marker
+function generateARMarker(imageData: ImageData): string {
+  // This is a simplified version. In a real-world scenario, you'd use a more complex algorithm
+  // to generate an AR.js compatible marker.
+  const canvas = document.createElement('canvas');
+  canvas.width = imageData.width;
+  canvas.height = imageData.height;
+  const ctx = canvas.getContext('2d');
+  if (ctx) {
+    ctx.putImageData(imageData, 0, 0);
+    return canvas.toDataURL('image/png');
+  }
+  return '';
+}
 
 export default MarkerUpload;
