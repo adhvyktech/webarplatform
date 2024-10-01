@@ -19,7 +19,7 @@ const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded }) => {
       // Convert image to AR.js marker format
       const img = new Image();
       img.onload = () => {
-        const canvas = document.createElement('canvas');
+        const canvas = document.createElement('canvas') as HTMLCanvasElement;
         canvas.width = 512;
         canvas.height = 512;
         const ctx = canvas.getContext('2d');
