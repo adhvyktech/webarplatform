@@ -11,11 +11,12 @@ interface ARExperienceData {
 const ARView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [arData, setArData] = useState<ARExperienceData | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchARExperience = async () => {
       try {
-        const response = await fetch(`/api/get-experience?id=${id}`);
+        const response = await fetch(`/.netlify/functions/get-experience?id=${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch AR experience');
         }
@@ -23,14 +24,19 @@ const ARView: React.FC = () => {
         setArData(data);
       } catch (error) {
         console.error('Error fetching AR experience:', error);
+        setError('Failed to load AR experience. Please try again.');
       }
     };
 
     fetchARExperience();
   }, [id]);
 
+  if (error) {
+    return <div className="text-red-500 text-center mt-8">{error}</div>;
+  }
+
   if (!arData) {
-    return <div>Loading AR experience...</div>;
+    return <div className="text-center mt-8">Loading AR experience...</div>;
   }
 
   return (

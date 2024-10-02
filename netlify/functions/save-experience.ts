@@ -2,7 +2,7 @@ import { Handler } from '@netlify/functions';
 import { promises as fs } from 'fs';
 import * as path from 'path';
 
-const DATA_FILE = path.join(process.cwd(), 'data', 'arExperiences.json');
+const DATA_FILE = path.join('/tmp', 'arExperiences.json');
 
 interface ARExperience {
   id: string;
