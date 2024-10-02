@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { supabase } from '../utils/supabaseClient';
 
 interface ARExperienceData {
   marker_url: string;
@@ -16,14 +15,11 @@ const ARView: React.FC = () => {
   useEffect(() => {
     const fetchARExperience = async () => {
       try {
-        const { data, error } = await supabase
-          .from('ar_experiences')
-          .select('*')
-          .eq('id', id)
-          .single();
-
-        if (error) throw error;
-
+        const response = await fetch(`/api/get-experience?id=${id}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch AR experience');
+        }
+        const data = await response.json();
         setArData(data);
       } catch (error) {
         console.error('Error fetching AR experience:', error);
