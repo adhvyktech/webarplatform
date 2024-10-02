@@ -1,6 +1,6 @@
 import { Handler } from '@netlify/functions';
-import fs from 'fs/promises';
-import path from 'path';
+import { promises as fs } from 'fs';
+import * as path from 'path';
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'arExperiences.json');
 
