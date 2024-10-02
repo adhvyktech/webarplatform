@@ -4,6 +4,13 @@ import MarkerUpload from '../components/MarkerUpload';
 import OutputUpload from '../components/OutputUpload';
 import PreviewSection from '../components/PreviewSection';
 
+interface ARExperienceData {
+  marker_url: string;
+  content_url: string;
+  scale: number;
+  rotation: number;
+}
+
 const ARExperience: React.FC = () => {
   const [markerUrl, setMarkerUrl] = useState<string | null>(null);
   const [contentUrl, setContentUrl] = useState<string | null>(null);
@@ -22,7 +29,7 @@ const ARExperience: React.FC = () => {
     setIsLoading(true);
     setError(null);
 
-    const arExperienceData = { marker_url: markerUrl, content_url: contentUrl, scale, rotation };
+    const arExperienceData: ARExperienceData = { marker_url: markerUrl, content_url: contentUrl, scale, rotation };
     
     try {
       const response = await fetch('/api/save-experience', {
