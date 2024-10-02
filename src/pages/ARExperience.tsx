@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import MarkerUpload from '../components/MarkerUpload';
 import OutputUpload from '../components/OutputUpload';
 import PreviewSection from '../components/PreviewSection';
-import { supabase, signInAnonymously } from '../utils/supabaseClient';
 
 const ARExperience: React.FC = () => {
   const [markerUrl, setMarkerUrl] = useState<string | null>(null);
@@ -13,19 +12,6 @@ const ARExperience: React.FC = () => {
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        await signInAnonymously();
-      } catch (error) {
-        console.error('Error signing in anonymously:', error);
-        setError('Failed to initialize. Please refresh the page and try again.');
-      }
-    };
-
-    initializeAuth();
-  }, []);
 
   const handleGenerateARExperience = async () => {
     if (!markerUrl || !contentUrl) {
