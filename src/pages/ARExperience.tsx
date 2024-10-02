@@ -32,7 +32,7 @@ const ARExperience: React.FC = () => {
     const arExperienceData: ARExperienceData = { marker_url: markerUrl, content_url: contentUrl, scale, rotation };
     
     try {
-      const response = await fetch('/api/save-experience', {
+      const response = await fetch('/.netlify/functions/save-experience', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
