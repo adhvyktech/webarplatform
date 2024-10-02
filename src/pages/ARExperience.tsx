@@ -51,7 +51,7 @@ const ARExperience: React.FC = () => {
       console.log('AR experience saved successfully!');
     } catch (error) {
       console.error('Error saving AR experience:', error);
-      setError(`Failed to save AR experience. ${error.message}`);
+      setError(`Failed to save AR experience. ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }

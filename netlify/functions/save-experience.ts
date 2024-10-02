@@ -64,7 +64,10 @@ export const handler: Handler = async (event) => {
     console.error('Error saving AR experience:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to save AR experience', details: error.message }),
+      body: JSON.stringify({ 
+        error: 'Failed to save AR experience', 
+        details: error instanceof Error ? error.message : String(error)
+      }),
     };
   }
 };
