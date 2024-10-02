@@ -41,7 +41,8 @@ const ARExperience: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save AR experience');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save AR experience');
       }
 
       const data = await response.json();
@@ -50,7 +51,7 @@ const ARExperience: React.FC = () => {
       console.log('AR experience saved successfully!');
     } catch (error) {
       console.error('Error saving AR experience:', error);
-      setError('Failed to save AR experience. Please try again.');
+      setError(`Failed to save AR experience. ${error.message}`);
     } finally {
       setIsLoading(false);
     }

@@ -16,6 +16,7 @@ async function ensureDataFile() {
   try {
     await fs.access(DATA_FILE);
   } catch (error) {
+    console.log('Creating new data file');
     await fs.writeFile(DATA_FILE, '[]');
   }
 }
@@ -31,6 +32,8 @@ async function writeExperiences(experiences: ARExperience[]): Promise<void> {
 }
 
 export const handler: Handler = async (event) => {
+  console.log('Function invoked with event:', JSON.stringify(event));
+
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -40,12 +43,19 @@ export const handler: Handler = async (event) => {
 
   try {
     const experiences = await readExperiences();
+    console.log('Current experiences:', JSON.stringify(experiences));
+
     const newExperience: ARExperience = {
       id: Date.now().toString(),
       ...JSON.parse(event.body || '{}'),
     };
+    console.log('New experience:', JSON.stringify(newExperience));
+
     experiences.push(newExperience);
     await writeExperiences(experiences);
+
+    console.log('Experience saved successfully');
+
     return {
       statusCode: 200,
       body: JSON.stringify(newExperience),
@@ -54,7 +64,7 @@ export const handler: Handler = async (event) => {
     console.error('Error saving AR experience:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to save AR experience' }),
+      body: JSON.stringify({ error: 'Failed to save AR experience', details: error.message }),
     };
   }
 };
