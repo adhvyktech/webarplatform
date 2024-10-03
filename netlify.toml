@@ -3,7 +3,14 @@
   publish = "build"
   functions = "netlify/functions"
 
+[functions]
+  node_bundler = "esbuild"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+[context.production.environment]
+  NETLIFY_BLOBS_SITE_ID = "${NETLIFY_BLOBS_SITE_ID}"
+  NETLIFY_BLOBS_TOKEN = "${NETLIFY_BLOBS_TOKEN}"

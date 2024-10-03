@@ -45,7 +45,7 @@ const ARExperience: React.FC = () => {
 
       if (!response.ok) {
         console.error('Server error:', data);
-        throw new Error(data.error || 'Failed to save AR experience');
+        throw new Error(JSON.stringify(data));
       }
 
       const arExperienceUrl = `${window.location.origin}/view/${data.id}`;
@@ -92,7 +92,8 @@ const ARExperience: React.FC = () => {
       </div>
       {error && (
         <div className="mt-4 text-red-500 text-center">
-          {error}
+          <p>Error: {error}</p>
+          <p className="text-sm mt-2">Please check the console for more details.</p>
         </div>
       )}
       {generatedUrl && (
