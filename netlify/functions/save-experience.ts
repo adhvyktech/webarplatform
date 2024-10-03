@@ -20,6 +20,10 @@ export const handler: Handler = async (event) => {
   }
 
   try {
+    if (!process.env.NETLIFY_BLOBS_SITE_ID || !process.env.NETLIFY_BLOBS_TOKEN) {
+      throw new Error('Netlify Blobs environment variables are not set');
+    }
+
     const store = await getStore('ar-experiences');
     const newExperience: ARExperience = {
       id: Date.now().toString(),

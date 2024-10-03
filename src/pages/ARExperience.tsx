@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import MarkerUpload from '../components/MarkerUpload';
 import OutputUpload from '../components/OutputUpload';
@@ -60,6 +61,9 @@ const ARExperience: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <Link to="/" className="text-blue-500 hover:underline mb-4 inline-block">
+        &larr; Back to Home
+      </Link>
       <h1 className="text-3xl font-bold mb-8">Create Your AR Experience</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <MarkerUpload onMarkerUploaded={setMarkerUrl} />
