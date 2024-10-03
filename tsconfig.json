@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
       "dom",
       "dom.iterable",
@@ -19,16 +19,15 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": []
+    "types": ["node"]
   },
   "include": [
     "src",
-    "netlify/functions"
+    "netlify/functions",
+    "global.d.ts"
   ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts",
-    "node:http",
-    "node_modules/@netlify/blobs/dist/main.d.ts"
+    "**/*.spec.ts"
   ]
 }

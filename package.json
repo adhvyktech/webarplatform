@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && tsc netlify/functions/*.ts",
+    "build": "react-scripts build && tsc --project tsconfig.functions.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -48,8 +48,5 @@
     "@types/webpack": "^5.28.0",
     "typescript": "^4.9.5",
     "webpack": "^5.88.2"
-  },
-  "overrides": {
-    "typescript": "^4.9.5"
   }
 }
