@@ -1,26 +1,5 @@
 import { Handler } from '@netlify/functions';
-import { promises as fs } from 'fs';
-import * as path from 'path';
-
-const DATA_FILE = path.join('/tmp', 'arExperiences.json');
-
-interface ARExperience {
-  id: string;
-  marker_url: string;
-  content_url: string;
-  scale: number;
-  rotation: number;
-}
-
-async function readExperiences(): Promise<ARExperience[]> {
-  try {
-    const data = await fs.readFile(DATA_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Error reading experiences:', error);
-    return [];
-  }
-}
+import { getStore } from '@netlify/blobs';
 
 export const handler: Handler = async (event) => {
   console.log('Function invoked with event:', JSON.stringify(event));
@@ -42,10 +21,10 @@ export const handler: Handler = async (event) => {
   }
 
   try {
-    const experiences = await readExperiences();
-    const experience = experiences.find(exp => exp.id === id);
+    const store = getStore('ar-experiences');
+    const experienceData = await store.get(id);
 
-    if (!experience) {
+    if (!experienceData) {
       return {
         statusCode: 404,
         body: JSON.stringify({ error: 'AR experience not found' }),
@@ -54,15 +33,13 @@ export const handler: Handler = async (event) => {
 
     return {
       statusCode: 200,
-      body: JSON.stringify(experience),
+      body: experienceData,
     };
   } catch (error) {
+    console.error('Error fetching AR experience:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ 
-        error: 'Failed to fetch AR experience', 
-        details: error instanceof Error ? error.message : 'Unknown error'
-      }),
+      body: JSON.stringify({ error: 'Failed to fetch AR experience', details: error instanceof Error ? error.message : 'Unknown error' }),
     };
   }
 };
