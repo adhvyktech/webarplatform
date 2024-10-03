@@ -11,6 +11,10 @@ interface ARExperience {
 
 export const handler: Handler = async (event) => {
   console.log('Function invoked with event:', JSON.stringify(event));
+  console.log('Environment variables:', {
+    NETLIFY_BLOBS_SITE_ID: process.env.NETLIFY_BLOBS_SITE_ID ? 'Set' : 'Not set',
+    NETLIFY_BLOBS_TOKEN: process.env.NETLIFY_BLOBS_TOKEN ? 'Set' : 'Not set',
+  });
 
   if (event.httpMethod !== 'POST') {
     return {
@@ -31,7 +35,11 @@ export const handler: Handler = async (event) => {
   }
 
   try {
-    const store = await getStore('ar-experiences');
+    const store = await getStore('ar-experiences', {
+      siteID: process.env.NETLIFY_BLOBS_SITE_ID,
+      token: process.env.NETLIFY_BLOBS_TOKEN,
+    });
+
     const newExperience: ARExperience = {
       id: Date.now().toString(),
       ...JSON.parse(event.body || '{}'),

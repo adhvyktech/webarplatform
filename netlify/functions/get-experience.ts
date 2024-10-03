@@ -16,10 +16,19 @@ export const handler: Handler = async (event) => {
     NETLIFY_BLOBS_TOKEN: process.env.NETLIFY_BLOBS_TOKEN ? 'Set' : 'Not set',
   });
 
-  if (event.httpMethod !== 'POST') {
+  if (event.httpMethod !== 'GET') {
     return {
       statusCode: 405,
       body: JSON.stringify({ error: 'Method Not Allowed' }),
+    };
+  }
+
+  const { id } = event.queryStringParameters || {};
+
+  if (!id) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Missing id parameter' }),
     };
   }
 
@@ -35,28 +44,34 @@ export const handler: Handler = async (event) => {
   }
 
   try {
-    const store = await getStore('ar-experiences');
-    const newExperience: ARExperience = {
-      id: Date.now().toString(),
-      ...JSON.parse(event.body || '{}'),
-    };
+    const store = await getStore('ar-experiences', {
+      siteID: process.env.NETLIFY_BLOBS_SITE_ID,
+      token: process.env.NETLIFY_BLOBS_TOKEN,
+    });
 
-    console.log('Attempting to save experience:', JSON.stringify(newExperience));
+    const experienceData = await store.get(id);
 
-    await store.set(newExperience.id, JSON.stringify(newExperience));
+    if (!experienceData) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ error: 'AR experience not found' }),
+      };
+    }
 
-    console.log('Experience saved successfully');
+    const experience: ARExperience = JSON.parse(experienceData);
+
+    console.log('Experience retrieved successfully:', id);
 
     return {
       statusCode: 200,
-      body: JSON.stringify(newExperience),
+      body: JSON.stringify(experience),
     };
   } catch (error) {
-    console.error('Error saving AR experience:', error);
+    console.error('Error fetching AR experience:', error);
     return {
       statusCode: 500,
       body: JSON.stringify({ 
-        error: 'Failed to save AR experience', 
+        error: 'Failed to fetch AR experience', 
         details: error instanceof Error ? error.message : 'Unknown error',
         stack: error instanceof Error ? error.stack : 'No stack trace available'
       }),
