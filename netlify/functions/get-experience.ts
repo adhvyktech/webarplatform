@@ -44,7 +44,8 @@ export const handler: Handler = async (event) => {
   }
 
   try {
-    const store = await getStore('ar-experiences', {
+    const store = await getStore({
+      name: 'ar-experiences',
       siteID: process.env.NETLIFY_BLOBS_SITE_ID,
       token: process.env.NETLIFY_BLOBS_TOKEN,
     });
