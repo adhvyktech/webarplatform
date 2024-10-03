@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 
 interface ARExperience {
@@ -48,9 +48,9 @@ const ARView: React.FC = () => {
         }
       }
     }
-  }, [arData]);
+  }, [arData, initializeAR]); // Add initializeAR to the dependency array
 
-  const initializeAR = () => {
+  const initializeAR = useCallback(() => {
     if (arData) {
       const markerEl = document.querySelector('a-marker');
       const entityEl = document.querySelector('a-entity');
@@ -66,7 +66,7 @@ const ARView: React.FC = () => {
         }
       }
     }
-  };
+  }, [arData]); // Add arData as a dependency
 
   if (loading) {
     return <div className="text-center mt-8">Loading AR experience...</div>;
