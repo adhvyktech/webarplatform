@@ -15,6 +15,25 @@ const ARView: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  // Move the initializeAR declaration before the useEffect
+  const initializeAR = useCallback(() => {
+    if (arData) {
+      const markerEl = document.querySelector('a-marker');
+      const entityEl = document.querySelector('a-entity');
+
+      if (markerEl && entityEl) {
+        markerEl.setAttribute('url', arData.marker_url);
+        entityEl.setAttribute('scale', `${arData.scale} ${arData.scale} ${arData.scale}`);
+        entityEl.setAttribute('rotation', `0 0 ${arData.rotation}`);
+        
+        const imageEl = entityEl.querySelector('a-image');
+        if (imageEl) {
+          imageEl.setAttribute('src', arData.content_url);
+        }
+      }
+    }
+  }, [arData]);
+
   useEffect(() => {
     const fetchARExperience = async () => {
       try {
@@ -48,25 +67,7 @@ const ARView: React.FC = () => {
         }
       }
     }
-  }, [arData, initializeAR]); // Add initializeAR to the dependency array
-
-  const initializeAR = useCallback(() => {
-    if (arData) {
-      const markerEl = document.querySelector('a-marker');
-      const entityEl = document.querySelector('a-entity');
-
-      if (markerEl && entityEl) {
-        markerEl.setAttribute('url', arData.marker_url);
-        entityEl.setAttribute('scale', `${arData.scale} ${arData.scale} ${arData.scale}`);
-        entityEl.setAttribute('rotation', `0 0 ${arData.rotation}`);
-        
-        const imageEl = entityEl.querySelector('a-image');
-        if (imageEl) {
-          imageEl.setAttribute('src', arData.content_url);
-        }
-      }
-    }
-  }, [arData]); // Add arData as a dependency
+  }, [arData, initializeAR]); // Now initializeAR is declared before it's used here
 
   if (loading) {
     return <div className="text-center mt-8">Loading AR experience...</div>;
