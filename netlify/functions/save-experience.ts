@@ -20,11 +20,13 @@ export const handler: Handler = async (event) => {
   }
 
   try {
-    const store = getStore('ar-experiences');
+    const store = await getStore('ar-experiences');
     const newExperience: ARExperience = {
       id: Date.now().toString(),
       ...JSON.parse(event.body || '{}'),
     };
+
+    console.log('Attempting to save experience:', JSON.stringify(newExperience));
 
     await store.set(newExperience.id, JSON.stringify(newExperience));
 
@@ -38,7 +40,11 @@ export const handler: Handler = async (event) => {
     console.error('Error saving AR experience:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to save AR experience', details: error instanceof Error ? error.message : 'Unknown error' }),
+      body: JSON.stringify({ 
+        error: 'Failed to save AR experience', 
+        details: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : 'No stack trace available'
+      }),
     };
   }
 };

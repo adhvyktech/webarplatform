@@ -42,6 +42,7 @@ const ARExperience: React.FC = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('Server error:', errorData);
         throw new Error(errorData.error || 'Failed to save AR experience');
       }
 
