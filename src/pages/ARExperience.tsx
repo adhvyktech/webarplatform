@@ -41,13 +41,13 @@ const ARExperience: React.FC = () => {
         body: JSON.stringify(arExperienceData),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Server error:', errorData);
-        throw new Error(errorData.error || 'Failed to save AR experience');
+        console.error('Server error:', data);
+        throw new Error(data.error || 'Failed to save AR experience');
       }
 
-      const data = await response.json();
       const arExperienceUrl = `${window.location.origin}/view/${data.id}`;
       setGeneratedUrl(arExperienceUrl);
       console.log('AR experience saved successfully!');

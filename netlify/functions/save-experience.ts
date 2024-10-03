@@ -19,11 +19,18 @@ export const handler: Handler = async (event) => {
     };
   }
 
-  try {
-    if (!process.env.NETLIFY_BLOBS_SITE_ID || !process.env.NETLIFY_BLOBS_TOKEN) {
-      throw new Error('Netlify Blobs environment variables are not set');
-    }
+  if (!process.env.NETLIFY_BLOBS_SITE_ID || !process.env.NETLIFY_BLOBS_TOKEN) {
+    console.error('Netlify Blobs environment variables are not set');
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: 'Server configuration error',
+        details: 'Netlify Blobs environment variables are not set'
+      }),
+    };
+  }
 
+  try {
     const store = await getStore('ar-experiences');
     const newExperience: ARExperience = {
       id: Date.now().toString(),
