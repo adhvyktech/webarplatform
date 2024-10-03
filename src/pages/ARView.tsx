@@ -48,7 +48,7 @@ const ARView: React.FC = () => {
         }
       }
     }
-  }, [arData, initializeAR]); // Add initializeAR to the dependency array
+  }, [arData]); // Remove initializeAR from the dependency array
 
   const initializeAR = useCallback(() => {
     if (arData) {
