@@ -1,2 +1,7 @@
-// This file is a placeholder and will be implemented later
-export {};
+import React from 'react';
+
+const Header = () => {
+  // Header component code
+};
+
+export default Header;
