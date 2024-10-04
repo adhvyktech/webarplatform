@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import ARExperience from './components/ARExperience';
-import ARView from './components/ARView';
-import Home from './components/Home';
+import ARExperience from './pages/ARExperience';
+import ARView from './pages/ARView';
+import Home from './pages/Home';
 
 const App: React.FC = () => {
   return (
