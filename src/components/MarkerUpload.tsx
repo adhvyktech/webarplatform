@@ -1,17 +1,12 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, Dispatch, SetStateAction } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 interface MarkerUploadProps {
-  onMarkerUploaded: (url: string) => void;
+  onMarkerUploaded: Dispatch<SetStateAction<string | null>>;
   onUpload: (file: File) => void;
 }
 
-interface MarkerUploadProps {
-  onMarkerUploaded: (markerUrl: string) => void;
-  onUpload: (file: File) => void;
-}
-
-const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded, onUpload }) => {
+const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -50,6 +45,12 @@ const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded, onUpload 
     accept: { 'image/*': [] },
     multiple: false,
   });
+
+  const onUpload = (file: File) => {
+    // Process the file if needed
+    const url = URL.createObjectURL(file);
+    onMarkerUploaded(url);
+  };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">

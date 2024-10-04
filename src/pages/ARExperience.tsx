@@ -46,7 +46,7 @@ const ARExperience: React.FC = () => {
       <Header />
       <main className="ar-experience-content">
         <h1>Create AR Experience</h1>
-        <MarkerUpload onUpload={handleMarkerUpload} />
+        <MarkerUpload onMarkerUploaded={setMarkerUrl} />
         <OutputUpload onUpload={handleOutputUpload} />
         <TargetTracking
           scale={scale}
