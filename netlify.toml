@@ -14,3 +14,6 @@
 [context.production.environment]
   NETLIFY_BLOBS_SITE_ID = "${NETLIFY_BLOBS_SITE_ID}"
   NETLIFY_BLOBS_TOKEN = "${NETLIFY_BLOBS_TOKEN}"
+
+[[plugins]]
+  package = "@netlify/plugin-next"
