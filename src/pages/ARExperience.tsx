@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import MarkerUpload from '../components/MarkerUpload';
@@ -7,7 +8,6 @@ import PreviewSection from '../components/PreviewSection';
 import TargetTracking from '../components/TargetTracking';
 import GenerateARExperience from '../components/GenerateARExperience';
 import '../styles/components.css';
-import { useNavigate } from 'react-router-dom';
 
 const ARExperience: React.FC = () => {
   const [markerImage, setMarkerImage] = useState<File | null>(null);
@@ -36,7 +36,11 @@ const ARExperience: React.FC = () => {
   const handleGenerateExperience = async () => {
     // Implement the logic to generate the AR experience
     console.log('Generating AR Experience');
-    // You can add your API call or state management logic here
+    // Simulating an API call with a timeout
+    setTimeout(() => {
+      const mockGeneratedUrl = `/view/${Date.now()}`;
+      setGeneratedUrl(mockGeneratedUrl);
+    }, 2000);
   };
 
   return (
