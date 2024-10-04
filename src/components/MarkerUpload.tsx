@@ -3,9 +3,15 @@ import { useDropzone } from 'react-dropzone';
 
 interface MarkerUploadProps {
   onMarkerUploaded: (url: string) => void;
+  onUpload: (file: File) => void;
 }
 
-const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded }) => {
+interface MarkerUploadProps {
+  onMarkerUploaded: (markerUrl: string) => void;
+  onUpload: (file: File) => void;
+}
+
+const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded, onUpload }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -31,10 +37,13 @@ const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded }) => {
         }
       };
       img.src = dataUrl;
+
+      // Call onUpload with the file
+      onUpload(file);
     };
 
     reader.readAsDataURL(file);
-  }, [onMarkerUploaded]);
+  }, [onMarkerUploaded, onUpload]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
