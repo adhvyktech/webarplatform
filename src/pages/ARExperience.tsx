@@ -10,27 +10,21 @@ import GenerateARExperience from '../components/GenerateARExperience';
 import '../styles/components.css';
 
 const ARExperience: React.FC = () => {
-  const [markerImage, setMarkerImage] = useState<File | null>(null);
-  const [outputImage, setOutputImage] = useState<File | null>(null);
+  const [markerUrl, setMarkerUrl] = useState<string | null>(null);
+  const [contentUrl, setContentUrl] = useState<string | null>(null);
   const [scale, setScale] = useState<number>(1);
   const [rotation, setRotation] = useState<number>(0);
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleMarkerUpload = (file: File) => {
-    setMarkerImage(file);
+    // Process the file if needed
+    const url = URL.createObjectURL(file);
+    setMarkerUrl(url);
   };
 
-  const handleOutputUpload = (file: File) => {
-    setOutputImage(file);
-  };
-
-  const handleScaleChange = (value: number) => {
-    setScale(value);
-  };
-
-  const handleRotationChange = (value: number) => {
-    setRotation(value);
+  const handleContentUpload = (url: string) => {
+    setContentUrl(url);
   };
 
   const handleGenerateExperience = async () => {
@@ -46,20 +40,24 @@ const ARExperience: React.FC = () => {
       <Header />
       <main className="ar-experience-content">
         <h1>Create AR Experience</h1>
-        <MarkerUpload onMarkerUploaded={setMarkerUrl} />
-        <OutputUpload onUpload={handleOutputUpload} />
+        <MarkerUpload onMarkerUploaded={setMarkerUrl} onUpload={handleMarkerUpload} />
+        <OutputUpload onContentUploaded={handleContentUpload} />
         <TargetTracking
           scale={scale}
           rotation={rotation}
-          onScaleChange={handleScaleChange}
-          onRotationChange={handleRotationChange}
+          onScaleChange={setScale}
+          onRotationChange={setRotation}
         />
-        <PreviewSection
-          markerImage={markerImage}
-          outputImage={outputImage}
-          scale={scale}
-          rotation={rotation}
-        />
+        {markerUrl && contentUrl && (
+          <PreviewSection
+            markerUrl={markerUrl}
+            contentUrl={contentUrl}
+            scale={scale}
+            rotation={rotation}
+            onScaleChange={setScale}
+            onRotationChange={setRotation}
+          />
+        )}
         <GenerateARExperience onGenerate={handleGenerateExperience} />
         {generatedUrl && (
           <div className="generated-url" aria-live="polite">

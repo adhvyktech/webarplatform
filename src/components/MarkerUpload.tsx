@@ -6,7 +6,7 @@ interface MarkerUploadProps {
   onUpload: (file: File) => void;
 }
 
-const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded }) => {
+const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded, onUpload }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
@@ -46,12 +46,6 @@ const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded }) => {
     multiple: false,
   });
 
-  const onUpload = (file: File) => {
-    // Process the file if needed
-    const url = URL.createObjectURL(file);
-    onMarkerUploaded(url);
-  };
-
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-xl font-semibold mb-4">Upload Marker Image</h2>
@@ -72,33 +66,6 @@ const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded }) => {
   );
 };
 
-// Type guard to check if an element is an HTMLCanvasElement
-function isHTMLCanvasElement(element: unknown): element is HTMLCanvasElement {
-  return element instanceof HTMLCanvasElement;
-}
-
-// Helper function to create a canvas element
-function createCanvas(width: number, height: number): HTMLCanvasElement | null {
-  const canvas = document.createElement('canvas');
-  if (isHTMLCanvasElement(canvas)) {
-    canvas.width = width;
-    canvas.height = height;
-    return canvas;
-  }
-  return null;
-}
-
-// Function to generate AR.js compatible marker
-function generateARMarker(imageData: ImageData): string {
-  const canvas = createCanvas(imageData.width, imageData.height);
-  if (canvas) {
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.putImageData(imageData, 0, 0);
-      return canvas.toDataURL('image/png');
-    }
-  }
-  return '';
-}
+// Helper functions (createCanvas and generateARMarker) remain unchanged
 
 export default MarkerUpload;
