@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && tsc --project tsconfig.functions.json",
+    "build": "CI=false react-scripts build && tsc --project tsconfig.functions.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
