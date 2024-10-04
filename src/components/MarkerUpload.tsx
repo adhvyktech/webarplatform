@@ -9,31 +9,14 @@ interface MarkerUploadProps {
 const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded, onUpload }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+  const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     const reader = new FileReader();
 
-    reader.onload = async (e: ProgressEvent<FileReader>) => {
+    reader.onload = (e) => {
       const dataUrl = e.target?.result as string;
       setPreviewUrl(dataUrl);
-
-      // Convert image to AR.js marker format
-      const img = new Image();
-      img.onload = () => {
-        const canvas = createCanvas(512, 512);
-        if (canvas) {
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.drawImage(img, 0, 0, 512, 512);
-            const imageData = ctx.getImageData(0, 0, 512, 512);
-            const markerUrl = generateARMarker(imageData);
-            onMarkerUploaded(markerUrl);
-          }
-        }
-      };
-      img.src = dataUrl;
-
-      // Call onUpload with the file
+      onMarkerUploaded(dataUrl);
       onUpload(file);
     };
 
@@ -65,7 +48,5 @@ const MarkerUpload: React.FC<MarkerUploadProps> = ({ onMarkerUploaded, onUpload 
     </div>
   );
 };
-
-// Helper functions (createCanvas and generateARMarker) remain unchanged
 
 export default MarkerUpload;

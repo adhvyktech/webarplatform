@@ -18,7 +18,6 @@ const ARExperience: React.FC = () => {
   const navigate = useNavigate();
 
   const handleMarkerUpload = (file: File) => {
-    // Process the file if needed
     const url = URL.createObjectURL(file);
     setMarkerUrl(url);
   };
@@ -39,40 +38,45 @@ const ARExperience: React.FC = () => {
     <div className="ar-experience-container">
       <Header />
       <main className="ar-experience-content">
-        <h1>Create AR Experience</h1>
-        <MarkerUpload onMarkerUploaded={setMarkerUrl} onUpload={handleMarkerUpload} />
-        <OutputUpload onContentUploaded={handleContentUpload} />
-        <TargetTracking
-          scale={scale}
-          rotation={rotation}
-          onScaleChange={setScale}
-          onRotationChange={setRotation}
-        />
+        <h1 className="text-3xl font-bold mb-8">Create Your AR Experience</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <MarkerUpload onMarkerUploaded={setMarkerUrl} onUpload={handleMarkerUpload} />
+          <OutputUpload onContentUploaded={handleContentUpload} />
+        </div>
         {markerUrl && contentUrl && (
-          <PreviewSection
-            markerUrl={markerUrl}
-            contentUrl={contentUrl}
-            scale={scale}
-            rotation={rotation}
-            onScaleChange={setScale}
-            onRotationChange={setRotation}
-          />
+          <>
+            <TargetTracking
+              scale={scale}
+              rotation={rotation}
+              onScaleChange={setScale}
+              onRotationChange={setRotation}
+            />
+            <PreviewSection
+              markerUrl={markerUrl}
+              contentUrl={contentUrl}
+              scale={scale}
+              rotation={rotation}
+              onScaleChange={setScale}
+              onRotationChange={setRotation}
+            />
+          </>
         )}
         <GenerateARExperience onGenerate={handleGenerateExperience} />
         {generatedUrl && (
-          <div className="generated-url" aria-live="polite">
-            <h2>Generated AR Experience URL:</h2>
+          <div className="generated-url mt-8" aria-live="polite">
+            <h2 className="text-2xl font-semibold mb-4">Generated AR Experience URL:</h2>
             <a 
               href={generatedUrl} 
               target="_blank" 
               rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
               aria-label="Open generated AR experience in new tab"
             >
               {generatedUrl}
             </a>
             <button 
               onClick={() => navigate(generatedUrl)} 
-              className="view-btn"
+              className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               aria-label="View AR Experience in current tab"
             >
               View AR Experience
