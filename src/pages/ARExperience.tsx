@@ -34,9 +34,7 @@ const ARExperience: React.FC = () => {
   };
 
   const handleGenerateExperience = async () => {
-    // Implement the logic to generate the AR experience
     console.log('Generating AR Experience');
-    // Simulating an API call with a timeout
     setTimeout(() => {
       const mockGeneratedUrl = `/view/${Date.now()}`;
       setGeneratedUrl(mockGeneratedUrl);
