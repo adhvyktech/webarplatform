@@ -2,6 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
+// Declare AR.js types
+declare global {
+  interface Window {
+    THREEx: {
+      ArToolkitSource: new (params: any) => any;
+      ArToolkitContext: new (params: any) => any;
+    };
+  }
+}
+
 const MobileARView: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -34,15 +44,16 @@ const MobileARView: React.FC = () => {
         .catch(error => console.error('Error accessing camera:', error));
 
       // Set up AR.js
-      const arToolkitSource = new ARToolkitSource({ sourceType: 'webcam' });
-      const arToolkitContext = new ARToolkitContext({
+      const arToolkitSource = new window.THREEx.ArToolkitSource({ sourceType: 'webcam' });
+      const arToolkitContext = new window.THREEx.ArToolkitContext({
         cameraParametersUrl: 'data/camera_para.dat',
         detectionMode: 'mono',
       });
 
       arToolkitSource.init(() => {
         arToolkitContext.init(() => {
-          camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+          // camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+          // Note: You'll need to set up a Three.js scene and camera here
         });
       });
 
@@ -53,6 +64,13 @@ const MobileARView: React.FC = () => {
           arToolkitContext.update(arToolkitSource.domElement);
           context?.clearRect(0, 0, canvas.width, canvas.height);
           // Render AR content here using arData
+          if (context && arData) {
+            const img = new Image();
+            img.onload = () => {
+              context.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+            img.src = arData.contentUrl;
+          }
         }
       };
       render();
@@ -67,20 +85,8 @@ const MobileARView: React.FC = () => {
         <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
       </Head>
       <video ref={videoRef} style={{ display: 'none' }} />
-      <canvas ref={canvasRef} className="ar-canvas" />
-      {arData ? (
-        <div className="ar-content">
-          {/* Render AR content based on arData */}
-          <img src={arData.contentUrl} alt="AR Content" style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: `translate(-50%, -50%) scale(${arData.scale}) rotate(${arData.rotation}deg)`,
-          }} />
-        </div>
-      ) : (
-        <p>Loading AR experience...</p>
-      )}
+      <canvas ref={canvasRef} className="ar-canvas" style={{ width: '100%', height: '100vh' }} />
+      {!arData && <p>Loading AR experience...</p>}
     </div>
   );
 };
