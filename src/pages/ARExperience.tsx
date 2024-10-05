@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useRouter } from 'next/router';
+import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import MarkerUpload from '../components/MarkerUpload';
@@ -8,14 +9,16 @@ import PreviewSection from '../components/PreviewSection';
 import TargetTracking from '../components/TargetTracking';
 import GenerateARExperience from '../components/GenerateARExperience';
 
-
 const ARExperience: React.FC = () => {
-  const [markerUrl, setMarkerUrl] = useState<string | null>(null);
-  const [contentUrl, setContentUrl] = useState<string | null>(null);
-  const [scale, setScale] = useState<number>(1);
-  const [rotation, setRotation] = useState<number>(0);
-  const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const router = useRouter();
+  const location = useLocation();
+  const { basename = '' } = location || {};
+
+  const [markerUrl, setMarkerUrl] = React.useState<string | null>(null);
+  const [contentUrl, setContentUrl] = React.useState<string | null>(null);
+  const [scale, setScale] = React.useState<number>(1);
+  const [rotation, setRotation] = React.useState<number>(0);
+  const [generatedUrl, setGeneratedUrl] = React.useState<string | null>(null);
 
   const handleMarkerUpload = (file: File) => {
     const url = URL.createObjectURL(file);
@@ -29,7 +32,7 @@ const ARExperience: React.FC = () => {
   const handleGenerateExperience = async () => {
     console.log('Generating AR Experience');
     setTimeout(() => {
-      const mockGeneratedUrl = `/view/${Date.now()}`;
+      const mockGeneratedUrl = `${basename}/view/${Date.now()}`;
       setGeneratedUrl(mockGeneratedUrl);
     }, 2000);
   };
@@ -75,7 +78,7 @@ const ARExperience: React.FC = () => {
               {generatedUrl}
             </a>
             <button 
-              onClick={() => navigate(generatedUrl)} 
+              onClick={() => router.push(generatedUrl)} 
               className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               aria-label="View AR Experience in current tab"
             >

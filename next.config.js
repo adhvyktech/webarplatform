@@ -15,6 +15,16 @@ const nextConfig = {
         },
       ];
     },
+    // Add this section to handle the static site generation
+    exportPathMap: async function (
+      defaultPathMap,
+      { dev, dir, outDir, distDir, buildId }
+    ) {
+      return {
+        '/': { page: '/' },
+        '/ar-experience': { page: '/ARExperience' },
+      };
+    },
   };
   
   module.exports = nextConfig;
