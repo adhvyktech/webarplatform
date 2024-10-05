@@ -1,6 +1,5 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import MarkerUpload from '../components/MarkerUpload';
@@ -11,8 +10,6 @@ import GenerateARExperience from '../components/GenerateARExperience';
 
 const ARExperience: React.FC = () => {
   const router = useRouter();
-  const location = useLocation();
-  const { basename = '' } = location || {};
 
   const [markerUrl, setMarkerUrl] = React.useState<string | null>(null);
   const [contentUrl, setContentUrl] = React.useState<string | null>(null);
@@ -32,7 +29,7 @@ const ARExperience: React.FC = () => {
   const handleGenerateExperience = async () => {
     console.log('Generating AR Experience');
     setTimeout(() => {
-      const mockGeneratedUrl = `${basename}/view/${Date.now()}`;
+      const mockGeneratedUrl = `/view/${Date.now()}`;
       setGeneratedUrl(mockGeneratedUrl);
     }, 2000);
   };
