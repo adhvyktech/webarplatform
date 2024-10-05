@@ -4,12 +4,21 @@ import MarkerUpload from '../components/MarkerUpload';
 import OutputUpload from '../components/OutputUpload';
 import PreviewSection from '../components/PreviewSection';
 
-const ARExperience: React.FC = () => {
+const ARViewer: React.FC = () => {
   const [markerUrl, setMarkerUrl] = useState<string | null>(null);
   const [contentUrl, setContentUrl] = useState<string | null>(null);
   const [scale, setScale] = useState<number>(1);
   const [rotation, setRotation] = useState<number>(0);
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
+
+  const handleMarkerUpload = (file: File) => {
+    const url = URL.createObjectURL(file);
+    setMarkerUrl(url);
+  };
+
+  const handleContentUpload = (url: string) => {
+    setContentUrl(url);
+  };
 
   const handleSave = async () => {
     const arExperienceData = { markerUrl, contentUrl, scale, rotation };
@@ -32,8 +41,8 @@ const ARExperience: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Create Your AR Experience</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <MarkerUpload onMarkerUploaded={setMarkerUrl} />
-        <OutputUpload onContentUploaded={setContentUrl} />
+        <MarkerUpload onMarkerUploaded={setMarkerUrl} onUpload={handleMarkerUpload} />
+        <OutputUpload onContentUploaded={handleContentUpload} />
       </div>
       {markerUrl && contentUrl && (
         <PreviewSection
@@ -69,4 +78,4 @@ const ARExperience: React.FC = () => {
   );
 };
 
-export default ARExperience;
+export default ARViewer;
