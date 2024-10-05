@@ -7,7 +7,7 @@ import OutputUpload from '../components/OutputUpload';
 import PreviewSection from '../components/PreviewSection';
 import TargetTracking from '../components/TargetTracking';
 import GenerateARExperience from '../components/GenerateARExperience';
-import '../styles/components.css';
+
 
 const ARExperience: React.FC = () => {
   const [markerUrl, setMarkerUrl] = useState<string | null>(null);
