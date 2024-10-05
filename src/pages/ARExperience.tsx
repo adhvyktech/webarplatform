@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -10,12 +10,11 @@ import GenerateARExperience from '../components/GenerateARExperience';
 
 const ARExperience: React.FC = () => {
   const router = useRouter();
-
-  const [markerUrl, setMarkerUrl] = React.useState<string | null>(null);
-  const [contentUrl, setContentUrl] = React.useState<string | null>(null);
-  const [scale, setScale] = React.useState<number>(1);
-  const [rotation, setRotation] = React.useState<number>(0);
-  const [generatedUrl, setGeneratedUrl] = React.useState<string | null>(null);
+  const [markerUrl, setMarkerUrl] = useState<string | null>(null);
+  const [contentUrl, setContentUrl] = useState<string | null>(null);
+  const [scale, setScale] = useState<number>(1);
+  const [rotation, setRotation] = useState<number>(0);
+  const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
 
   const handleMarkerUpload = (file: File) => {
     const url = URL.createObjectURL(file);
